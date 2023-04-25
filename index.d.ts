@@ -1,3 +1,2 @@
-export * from "./PageStateContext";
+export * from "./PageStateClient";
 export * from "./PageStateProvider";
-export * from "./parseToPageState";

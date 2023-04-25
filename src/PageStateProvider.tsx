@@ -1,17 +1,21 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { setCookie } from "nookies";
-import { getQueryStringByPageState } from "nrstate";
-import { PageStateContext } from "./PageStateContext";
+import React from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { setCookie } from 'nookies';
+import { PageStateContext } from './PageStateClient';
 
 function setCookieForState(key: string, value: string) {
   setCookie(null, key, value, {
     maxAge: 30 * 24 * 60 * 60,
-    path: "/",
+    path: '/',
   });
+}
+
+export function parseQueryStringByPageState<T>(pageState: T) {
+  const queryString = `${encodeURIComponent(JSON.stringify(pageState))}`;
+  return queryString;
 }
 
 export default function PageStateProvider<T>({
@@ -25,10 +29,10 @@ export default function PageStateProvider<T>({
   const router = useRouter();
 
   function setPageState(nextPageState: T, path: string) {
-    let newPageState = { ...pageState, ...nextPageState };
+    const newPageState = { ...pageState, ...nextPageState };
     _setPageState(newPageState);
 
-    const pageStateString = getQueryStringByPageState(path, newPageState);
+    const pageStateString = parseQueryStringByPageState(newPageState);
     setCookieForState(path, `${pageStateString}`);
 
     router.push(`${location.origin}${path}`);
