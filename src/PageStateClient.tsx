@@ -1,11 +1,13 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import { parseCookies } from 'nookies';
+import { destroyCookie, parseCookies } from 'nookies';
 
 export const PageStateContext = createContext(undefined as any);
-export function usePageState() {
-  return useContext(PageStateContext);
+export function usePageState<T>() {
+  return useContext<[T, (pageState: T, path: string) => void]>(
+    PageStateContext,
+  );
 }
 
 export function getPageState<T>(initialPageState: T, path: string): T {
@@ -15,8 +17,12 @@ export function getPageState<T>(initialPageState: T, path: string): T {
   if (!value) {
     return initialPageState;
   }
-  
+
   const jsonString = decodeURIComponent(value ?? '');
   const json = JSON.parse(jsonString);
   return json;
+}
+
+export function clearPageState(path: string) {
+  destroyCookie(null, path);
 }

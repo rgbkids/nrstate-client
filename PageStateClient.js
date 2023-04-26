@@ -1,7 +1,7 @@
 "use strict";
 'use client';
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPageState = exports.usePageState = exports.PageStateContext = void 0;
+exports.clearPageState = exports.getPageState = exports.usePageState = exports.PageStateContext = void 0;
 const react_1 = require("react");
 const nookies_1 = require("nookies");
 exports.PageStateContext = (0, react_1.createContext)(undefined);
@@ -20,3 +20,7 @@ function getPageState(initialPageState, path) {
     return json;
 }
 exports.getPageState = getPageState;
+function clearPageState(path) {
+    (0, nookies_1.destroyCookie)(null, path);
+}
+exports.clearPageState = clearPageState;

@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation';
 import { setCookie } from 'nookies';
 import { PageStateContext } from './PageStateClient';
 
-function setCookieForState(key: string, value: string) {
+import xxhash from 'xxhash-wasm';
+
+function setCookieForPageState(key: string, value: string, maxAge?: number) {
   setCookie(null, key, value, {
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: maxAge ?? 30 * 24 * 60 * 60,
     path: '/',
   });
 }
@@ -21,9 +23,11 @@ export function parseQueryStringByPageState<T>(pageState: T) {
 export default function PageStateProvider<T>({
   children,
   current,
+  maxAge,
 }: {
   children: React.ReactNode;
   current: T;
+  maxAge?: number;
 }) {
   const [pageState, _setPageState] = useState(current);
   const router = useRouter();
@@ -33,9 +37,12 @@ export default function PageStateProvider<T>({
     _setPageState(newPageState);
 
     const pageStateString = parseQueryStringByPageState(newPageState);
-    setCookieForState(path, `${pageStateString}`);
+    setCookieForPageState(path, `${pageStateString}`, maxAge);
 
-    router.push(`${location.origin}${path}`);
+    xxhash().then((hasher) => {
+      const hash = hasher.h64ToString(pageStateString);
+      router.push(`${location.origin}${path}?location=${hash}`);
+    });
   }
 
   return (
