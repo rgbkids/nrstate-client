@@ -5,12 +5,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.0.4",
-    "xxhash-wasm": "1.0.2",
-    "nrstate": "0.8.4"
+    "nrstate": "1.0.0"
   },
   "name": "nrstate-client",
   "description": "State for React Server Components on Next.js",
-  "version": "0.8.4",
+  "version": "1.0.0",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
