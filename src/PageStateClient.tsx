@@ -23,6 +23,15 @@ export function getPageState<T>(initialPageState: T, path: string): T {
   return json;
 }
 
+export function getPageLocation(path: string) {
+  const cookies = parseCookies();
+  const value = cookies[path];
+  const jsonString = decodeURIComponent(value ?? '');
+  const json = JSON.parse(jsonString);
+  const params = new URLSearchParams(json);
+  return params.toString();
+}
+
 export function clearPageState(path: string) {
   destroyCookie(null, path);
 }

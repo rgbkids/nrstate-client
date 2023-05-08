@@ -5,11 +5,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.0.4",
-    "nrstate": "1.0.0"
+    "nrstate": "1.0.1"
   },
   "name": "nrstate-client",
   "description": "State for React Server Components on Next.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
