@@ -24,12 +24,17 @@ exports.parseQueryStringByPageState = parseQueryStringByPageState;
 function PageStateProvider({ children, current, maxAge, }) {
     const [pageState, _setPageState] = (0, react_2.useState)(current);
     const router = (0, navigation_1.useRouter)();
-    function setPageState(nextPageState, path) {
+    function setPageState(nextPageState, path, revalidate) {
         const newPageState = Object.assign(Object.assign({}, pageState), nextPageState);
         _setPageState(newPageState);
         const pageStateString = parseQueryStringByPageState(newPageState);
         setCookieForPageState(path, `${pageStateString}`, maxAge);
-        router.refresh();
+        if (revalidate) {
+            revalidate();
+        }
+        else {
+            router.refresh();
+        }
     }
     return (react_1.default.createElement(PageStateClient_1.PageStateContext.Provider, { value: [pageState, setPageState] }, children));
 }

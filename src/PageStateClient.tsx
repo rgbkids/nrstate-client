@@ -5,9 +5,9 @@ import { destroyCookie, parseCookies } from 'nookies';
 
 export const PageStateContext = createContext(undefined as any);
 export function usePageState<T>() {
-  return useContext<[T, (pageState: T, path: string) => void]>(
-    PageStateContext,
-  );
+  return useContext<
+    [T, (pageState: T, path: string, refresh?: () => void) => void]
+  >(PageStateContext);
 }
 
 export function getPageState<T>(initialPageState: T, path: string): T {
@@ -24,12 +24,16 @@ export function getPageState<T>(initialPageState: T, path: string): T {
 }
 
 export function getPageLocation(path: string) {
-  const cookies = parseCookies();
-  const value = cookies[path];
-  const jsonString = decodeURIComponent(value ?? '');
-  const json = JSON.parse(jsonString);
-  const params = new URLSearchParams(json);
-  return params.toString();
+  try {
+    const cookies = parseCookies();
+    const value = cookies[path];
+    const jsonString = decodeURIComponent(value ?? '');
+    const json = JSON.parse(jsonString);
+    const params = new URLSearchParams(json);
+    return params.toString();
+  } catch (error) {
+    return '';
+  }
 }
 
 export function clearPageState(path: string) {

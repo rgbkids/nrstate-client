@@ -27,17 +27,25 @@ export default function PageStateProvider<T>({
   current: T;
   maxAge?: number;
 }) {
-  const [pageState, _setPageState] = useState(current);
+  const [pageState, _setPageState] = useState<T>(current);
   const router = useRouter();
 
-  function setPageState(nextPageState: T, path: string) {
+  function setPageState(
+    nextPageState: T,
+    path: string,
+    revalidate?: () => void,
+  ) {
     const newPageState = { ...pageState, ...nextPageState };
     _setPageState(newPageState);
 
     const pageStateString = parseQueryStringByPageState(newPageState);
     setCookieForPageState(path, `${pageStateString}`, maxAge);
 
-    router.refresh();
+    if (revalidate) {
+      revalidate();
+    } else {
+      router.refresh();
+    }
   }
 
   return (

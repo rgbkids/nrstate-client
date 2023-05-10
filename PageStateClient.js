@@ -21,12 +21,17 @@ function getPageState(initialPageState, path) {
 }
 exports.getPageState = getPageState;
 function getPageLocation(path) {
-    const cookies = (0, nookies_1.parseCookies)();
-    const value = cookies[path];
-    const jsonString = decodeURIComponent(value !== null && value !== void 0 ? value : '');
-    const json = JSON.parse(jsonString);
-    const params = new URLSearchParams(json);
-    return params.toString();
+    try {
+        const cookies = (0, nookies_1.parseCookies)();
+        const value = cookies[path];
+        const jsonString = decodeURIComponent(value !== null && value !== void 0 ? value : '');
+        const json = JSON.parse(jsonString);
+        const params = new URLSearchParams(json);
+        return params.toString();
+    }
+    catch (error) {
+        return '';
+    }
 }
 exports.getPageLocation = getPageLocation;
 function clearPageState(path) {
